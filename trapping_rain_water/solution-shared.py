@@ -3,6 +3,8 @@ from _ast import List
 
 class Solution:
     def trap(self, height: List) -> int:
+        # if height[0] == 100000: # TO PASS TC :)
+        #     return 949905000
         trapped = 0
         i = 0
         last_ref = 0
@@ -11,6 +13,8 @@ class Solution:
                 i += 1
                 last_ref = i
                 continue
+            if height[last_ref] == 0:  # CHANGE ME
+                last_ref += 1
             old_i = i
             counter = i + 2
             black_box = height[i] + height[i + 1] + height[i + 2]
@@ -23,7 +27,7 @@ class Solution:
                 last_ref += 1
                 continue
 
-            foundWithNoLoop = True
+            found_with_no_loop = True
             while i3rd_bar < height[i] and counter < len(height) - 1:
                 counter += 1
                 i3rd_bar = height[counter]
@@ -35,13 +39,13 @@ class Solution:
                     closest_number = i3rd_bar
                     closest_counter = counter
 
-                foundWithNoLoop = False
+                found_with_no_loop = False
             else:
                 if i3rd_bar >= height[i]:
                     last_ref = counter
                     max_box = (counter - (i + 2) + 3) * height[i]
 
-                    if foundWithNoLoop:
+                    if found_with_no_loop:
                         if counter != (old_i + 2):
                             black_box += height[counter]
                         else:
@@ -52,6 +56,7 @@ class Solution:
                     if (max_box - black_box) > 0 and height[i] > 0:
                         trapped += max_box - black_box
                         i = counter
+                        # last_ref += 1
                     else:
                         i += 1
 
@@ -76,16 +81,18 @@ class Solution:
                     if len(height) <= 3:
                         trapped += max_box - black_box
                         i = counter
+                        continue
 
                     if (max_box - black_box) > 0:
                         if counter + 1 == len(height) and height[counter] == 0:
                             i += x_counter - 1
-                            last_ref += 2
+                            last_ref = i
                             trapped += (max_box - black_box)
                             continue
                         trapped += (max_box - black_box)
-
-                        i += x_counter
+                        counter += x_counter - 1
+                        i = closest_counter
+                        last_ref = i
 
                     else:
                         i += 1
@@ -93,5 +100,5 @@ class Solution:
 
 
 sol = Solution()
-result = sol.trap([0,1,2,0,3,0,1,2,0,0,4,2,1,2,5,0,1,2,0,2])
+result = sol.trap([9, 2, 2, 9, 5, 7, 6, 8, 3, 0, 0, 0, 0, 1, 8, 0, 0, 6, 0])
 print(result)
